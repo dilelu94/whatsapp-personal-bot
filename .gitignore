@@ -1,0 +1,26 @@
+# Credentials and Keys
+googleCredentials.json
+google-credentials.json
+vpsCredentials.json
+sshKey20260524.key
+sshKey20260524.key.pub
+tests/test_*_storage.json
+qr.txt
+qr_raw.txt
+qr_url.txt
+
+# WhatsApp Session Auth and Cache
+.wwebjs_auth/
+.wwebjs_cache/
+storage.json
+
+# Node dependencies and logs
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# System Files
+.DS_Store
+Thumbs.db
