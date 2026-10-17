@@ -14,11 +14,11 @@ describe('utils - formatNumberToJid', () => {
     });
 
     test('should return already formatted group JID unmodified', () => {
-        expect(formatNumberToJid('120363024843194098@g.us')).toBe('120363024843194098@g.us');
+        expect(formatNumberToJid('120363000000000001@g.us')).toBe('120363000000000001@g.us');
     });
 
     test('should return already formatted lid JID unmodified', () => {
-        expect(formatNumberToJid('9247349829794@lid')).toBe('9247349829794@lid');
+        expect(formatNumberToJid('100000000000000@lid')).toBe('100000000000000@lid');
     });
 
     test('should throw error for empty or invalid number', () => {

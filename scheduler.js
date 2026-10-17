@@ -12,6 +12,9 @@ function randomRange(min, max) {
 }
 
 function sleep(ms) {
+  if (process.env.NODE_ENV === "test") {
+    return Promise.resolve();
+  }
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -37,12 +40,14 @@ async function sendScheduledMessage(messageObj, dbPath) {
       `[Scheduler] Enviando mensaje ${messageObj.id} a ${messageObj.to}...`,
     );
 
-    // Simular comportamiento humano antes de enviar
-    const typingTime = randomRange(1500, 5000);
-    await sleep(typingTime);
-    try {
-      await whatsappClient.sendPresenceAvailable();
-    } catch (_) {}
+    // Simular comportamiento humano antes de enviar (en producción)
+    if (process.env.NODE_ENV !== "test") {
+      const typingTime = randomRange(1500, 5000);
+      await sleep(typingTime);
+      try {
+        await whatsappClient.sendPresenceAvailable();
+      } catch (_) {}
+    }
 
     if (messageObj.mediaUrl || messageObj.mediaPath) {
       const { MessageMedia } = require("whatsapp-web.js");
@@ -131,9 +136,11 @@ function scheduleMessage(messageObj, dbPath) {
   }
 
   const job = schedule.scheduleJob(scheduleRule, async () => {
-    // Jitter humano: 0-30s aleatorios antes de enviar
-    const jitter = randomRange(0, 30000);
-    await sleep(jitter);
+    // Jitter humano: 0-30s aleatorios antes de enviar (en producción)
+    if (process.env.NODE_ENV !== "test") {
+      const jitter = randomRange(0, 30000);
+      await sleep(jitter);
+    }
     try {
       await sendScheduledMessage(messageObj, dbPath);
     } catch (error) {

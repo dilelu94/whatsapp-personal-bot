@@ -9,8 +9,8 @@ const TEST_DB_PATH = path.join(__dirname, 'test_google_storage.json');
 // Mock WhatsApp Client
 const mockWhatsAppClient = {
     getChats: jest.fn().mockResolvedValue([
-        { id: { _serialized: '5491112345678@c.us' }, name: 'Xiomara' },
-        { id: { _serialized: '120363024843194098@g.us' }, name: 'Eventos vapor' }
+        { id: { _serialized: '5491112345678@c.us' }, name: 'Juan Perez' },
+        { id: { _serialized: '120363000000000001@g.us' }, name: 'Grupo Trabajo' }
     ])
 };
 
@@ -98,7 +98,7 @@ describe('google.js module', () => {
         const mockEventsList = [
             {
                 id: 'event_wa_1',
-                summary: '[WA] "Xiomara" - Hola Xiomara!',
+                summary: '[WA] "Juan Perez" - Hola Juan Perez!',
                 start: { dateTime: futureTime.toISOString() }
             },
             {
@@ -115,7 +115,7 @@ describe('google.js module', () => {
         const messages = db.getMessages(TEST_DB_PATH);
         expect(messages).toHaveLength(1);
         expect(messages[0].to).toBe('5491112345678@c.us');
-        expect(messages[0].body).toBe('Hola Xiomara!');
+        expect(messages[0].body).toBe('Hola Juan Perez!');
         expect(messages[0].calendarEventId).toBe('event_wa_1');
         expect(messages[0].status).toBe('pending');
 
@@ -142,7 +142,7 @@ describe('google.js module', () => {
         const mockEventsList = [
             {
                 id: 'event_wa_2',
-                summary: '[WA] "Xiomara" - New message text',
+                summary: '[WA] "Juan Perez" - New message text',
                 start: { dateTime: newTime.toISOString() }
             }
         ];

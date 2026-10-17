@@ -12,8 +12,8 @@ const mockClientInstance = {
     getChats: jest.fn().mockResolvedValue([]),
     getChatById: jest.fn().mockImplementation((id) => {
         let name = 'Resolved Chat';
-        if (id === '12345@g.us') name = 'Eventos vapor';
-        if (id === '5491112345678@c.us') name = 'Xiomara';
+        if (id === '12345@g.us') name = 'Grupo Trabajo';
+        if (id === '5491112345678@c.us') name = 'Juan Perez';
         return Promise.resolve({ id: { _serialized: id }, name });
     })
 };
@@ -198,8 +198,8 @@ describe('bot index.js integration', () => {
         mockClientInstance.getChats.mockResolvedValue([
             {
                 isGroup: true,
-                name: 'Eventos vapor',
-                id: { _serialized: '120363024843194098@g.us' }
+                name: 'Grupo Trabajo',
+                id: { _serialized: '120363000000000001@g.us' }
             },
             {
                 isGroup: false,
@@ -209,7 +209,7 @@ describe('bot index.js integration', () => {
         ]);
 
         const incomingMessage = {
-            body: '/schedule "Eventos vapor" 05-23-2030 15:30 Quoted group message!',
+            body: '/schedule "Grupo Trabajo" 05-23-2030 15:30 Quoted group message!',
             from: 'my-number@c.us',
             reply: jest.fn().mockResolvedValue()
         };
@@ -222,7 +222,7 @@ describe('bot index.js integration', () => {
 
         const messages = db.getMessages(TEST_DB_PATH);
         expect(messages).toHaveLength(1);
-        expect(messages[0].to).toBe('120363024843194098@g.us');
+        expect(messages[0].to).toBe('120363000000000001@g.us');
         expect(messages[0].body).toBe('Quoted group message!');
     });
 
@@ -236,7 +236,7 @@ describe('bot index.js integration', () => {
         ]);
 
         const incomingMessage = {
-            body: '/schedule "Eventos vapor" 05-23-2030 15:30 This should fail!',
+            body: '/schedule "Grupo Trabajo" 05-23-2030 15:30 This should fail!',
             from: 'my-number@c.us',
             reply: jest.fn().mockResolvedValue()
         };
@@ -244,7 +244,7 @@ describe('bot index.js integration', () => {
         await mockEvents['message'](incomingMessage);
 
         expect(incomingMessage.reply).toHaveBeenCalledWith(
-            expect.stringContaining('Error: No se encontró ningún chat o grupo llamado "Eventos vapor"')
+            expect.stringContaining('Error: No se encontró ningún chat o grupo llamado "Grupo Trabajo"')
         );
 
         const messages = db.getMessages(TEST_DB_PATH);
@@ -255,13 +255,13 @@ describe('bot index.js integration', () => {
         mockClientInstance.getChats.mockResolvedValue([
             {
                 isGroup: false,
-                name: 'Xiomara',
+                name: 'Juan Perez',
                 id: { _serialized: '5491198765432@c.us' }
             }
         ]);
 
         const incomingMessage = {
-            body: '/schedule "Xiomara" 05-23-2030 15:30 Hola Xiomara!',
+            body: '/schedule "Juan Perez" 05-23-2030 15:30 Hola Juan Perez!',
             from: 'my-number@c.us',
             reply: jest.fn().mockResolvedValue()
         };
@@ -275,20 +275,20 @@ describe('bot index.js integration', () => {
         const messages = db.getMessages(TEST_DB_PATH);
         expect(messages).toHaveLength(1);
         expect(messages[0].to).toBe('5491198765432@c.us');
-        expect(messages[0].body).toBe('Hola Xiomara!');
+        expect(messages[0].body).toBe('Hola Juan Perez!');
     });
 
     test('should process scheduling with "en <minutos>" relative format', async () => {
         mockClientInstance.getChats.mockResolvedValue([
             {
                 isGroup: false,
-                name: 'Xiomara',
+                name: 'Juan Perez',
                 id: { _serialized: '5491198765432@c.us' }
             }
         ]);
 
         const incomingMessage = {
-            body: '/schedule "Xiomara" en 5 Hola in 5 minutes!',
+            body: '/schedule "Juan Perez" en 5 Hola in 5 minutes!',
             from: 'my-number@c.us',
             reply: jest.fn().mockResolvedValue()
         };
@@ -315,13 +315,13 @@ describe('bot index.js integration', () => {
         mockClientInstance.getChats.mockResolvedValue([
             {
                 isGroup: false,
-                name: 'Xiomara',
+                name: 'Juan Perez',
                 id: { _serialized: '5491198765432@c.us' }
             }
         ]);
 
         const incomingMessage = {
-            body: '/schedule "Xiomara" hoy en 10 Hola today in 10 minutes!',
+            body: '/schedule "Juan Perez" hoy en 10 Hola today in 10 minutes!',
             from: 'my-number@c.us',
             reply: jest.fn().mockResolvedValue()
         };
@@ -346,14 +346,14 @@ describe('bot index.js integration', () => {
     test('should respond with the group ID when /groupid command is sent', async () => {
         const incomingMessage = {
             body: '/groupid',
-            from: '120363024843194098@g.us',
+            from: '120363000000000001@g.us',
             reply: jest.fn().mockResolvedValue()
         };
 
         await mockEvents['message'](incomingMessage);
 
         expect(incomingMessage.reply).toHaveBeenCalledWith(
-            expect.stringContaining('120363024843194098@g.us')
+            expect.stringContaining('120363000000000001@g.us')
         );
     });
 
@@ -361,15 +361,15 @@ describe('bot index.js integration', () => {
         const incomingMessage = {
             body: '/groupid',
             fromMe: true,
-            from: '9247349829794@lid',
-            to: '120363334849146364@g.us',
+            from: '100000000000000@lid',
+            to: '120363000000000002@g.us',
             reply: jest.fn().mockResolvedValue()
         };
 
         await mockEvents['message_create'](incomingMessage);
 
         expect(incomingMessage.reply).toHaveBeenCalledWith(
-            expect.stringContaining('120363334849146364@g.us')
+            expect.stringContaining('120363000000000002@g.us')
         );
     });
 
@@ -378,13 +378,13 @@ describe('bot index.js integration', () => {
             mockClientInstance.getChats.mockResolvedValue([
                 {
                     isGroup: true,
-                    name: 'Eventos vapor',
-                    id: { _serialized: '120363334849146364@g.us' }
+                    name: 'Grupo Trabajo',
+                    id: { _serialized: '120363000000000002@g.us' }
                 }
             ]);
 
             const incomingMessage = {
-                body: '/autoreact "Eventos vapor" 😂',
+                body: '/autoreact "Grupo Trabajo" 😂',
                 from: 'my-number@c.us',
                 reply: jest.fn().mockResolvedValue()
             };
@@ -392,28 +392,28 @@ describe('bot index.js integration', () => {
             await mockEvents['message'](incomingMessage);
 
             expect(incomingMessage.reply).toHaveBeenCalledWith(
-                expect.stringContaining('Auto-reacción activada con el emoji 😂 para el chat/grupo "Eventos vapor"')
+                expect.stringContaining('Auto-reacción activada con el emoji 😂 para el chat/grupo "Grupo Trabajo"')
             );
 
             // Verify db has the autoReaction
             const reactions = db.getAutoReactions(TEST_DB_PATH);
-            expect(reactions['120363334849146364@g.us']).toBe('😂');
+            expect(reactions['120363000000000002@g.us']).toBe('😂');
         });
 
         test('should process a valid /autoreact command to disable reactions', async () => {
             mockClientInstance.getChats.mockResolvedValue([
                 {
                     isGroup: true,
-                    name: 'Eventos vapor',
-                    id: { _serialized: '120363334849146364@g.us' }
+                    name: 'Grupo Trabajo',
+                    id: { _serialized: '120363000000000002@g.us' }
                 }
             ]);
 
             // Save one first
-            db.saveAutoReaction('120363334849146364@g.us', '😂', TEST_DB_PATH);
+            db.saveAutoReaction('120363000000000002@g.us', '😂', TEST_DB_PATH);
 
             const incomingMessage = {
-                body: '/autoreact "Eventos vapor" off',
+                body: '/autoreact "Grupo Trabajo" off',
                 from: 'my-number@c.us',
                 reply: jest.fn().mockResolvedValue()
             };
@@ -421,20 +421,20 @@ describe('bot index.js integration', () => {
             await mockEvents['message'](incomingMessage);
 
             expect(incomingMessage.reply).toHaveBeenCalledWith(
-                expect.stringContaining('Auto-reacción desactivada para el chat/grupo "Eventos vapor"')
+                expect.stringContaining('Auto-reacción desactivada para el chat/grupo "Grupo Trabajo"')
             );
 
             const reactions = db.getAutoReactions(TEST_DB_PATH);
-            expect(reactions['120363334849146364@g.us']).toBeUndefined();
+            expect(reactions['120363000000000002@g.us']).toBeUndefined();
         });
 
         test('should react to non-command messages in a configured chat', async () => {
             // Configure auto-reaction
-            db.saveAutoReaction('120363334849146364@g.us', '😂', TEST_DB_PATH);
+            db.saveAutoReaction('120363000000000002@g.us', '😂', TEST_DB_PATH);
 
             const incomingMessage = {
                 body: 'Hola grupo',
-                from: '120363334849146364@g.us',
+                from: '120363000000000002@g.us',
                 react: jest.fn().mockResolvedValue()
             };
 
@@ -447,13 +447,13 @@ describe('bot index.js integration', () => {
             mockClientInstance.getChats.mockResolvedValue([
                 {
                     isGroup: true,
-                    name: 'Eventos vapor',
-                    id: { _serialized: '120363334849146364@g.us' }
+                    name: 'Grupo Trabajo',
+                    id: { _serialized: '120363000000000002@g.us' }
                 }
             ]);
 
             const incomingMessage = {
-                body: '/autoreact "Eventos vapor" "Frank" 🔥',
+                body: '/autoreact "Grupo Trabajo" "Frank" 🔥',
                 from: 'my-number@c.us',
                 reply: jest.fn().mockResolvedValue()
             };
@@ -461,25 +461,25 @@ describe('bot index.js integration', () => {
             await mockEvents['message'](incomingMessage);
 
             expect(incomingMessage.reply).toHaveBeenCalledWith(
-                expect.stringContaining('Auto-reacción activada con el emoji 🔥 para el usuario "Frank" en el chat/grupo "Eventos vapor"')
+                expect.stringContaining('Auto-reacción activada con el emoji 🔥 para el usuario "Frank" en el chat/grupo "Grupo Trabajo"')
             );
 
             // Verify db has the autoReaction
             const reactions = db.getAutoReactions(TEST_DB_PATH);
-            expect(reactions['120363334849146364@g.us']).toEqual({
+            expect(reactions['120363000000000002@g.us']).toEqual({
                 default: null,
                 users: { frank: '🔥' }
             });
         });
 
         test('should react with user-specific emoji and fallback to default', async () => {
-            db.saveAutoReaction('120363334849146364@g.us', '😂', TEST_DB_PATH);
-            db.saveAutoReaction('120363334849146364@g.us', '🔥', 'Frank', TEST_DB_PATH);
+            db.saveAutoReaction('120363000000000002@g.us', '😂', TEST_DB_PATH);
+            db.saveAutoReaction('120363000000000002@g.us', '🔥', 'Frank', TEST_DB_PATH);
 
             // Message from Frank
             const frankMsg = {
                 body: 'Hola',
-                from: '120363334849146364@g.us',
+                from: '120363000000000002@g.us',
                 react: jest.fn().mockResolvedValue(),
                 getContact: jest.fn().mockResolvedValue({
                     id: { _serialized: '5491112345678@c.us' },
@@ -495,7 +495,7 @@ describe('bot index.js integration', () => {
             // Message from Alice (fallback to default)
             const aliceMsg = {
                 body: 'Hola',
-                from: '120363334849146364@g.us',
+                from: '120363000000000002@g.us',
                 react: jest.fn().mockResolvedValue(),
                 getContact: jest.fn().mockResolvedValue({
                     id: { _serialized: '5491187654321@c.us' },
@@ -510,11 +510,11 @@ describe('bot index.js integration', () => {
         });
 
         test('should NOT react to command messages in a configured chat', async () => {
-            db.saveAutoReaction('120363334849146364@g.us', '😂', TEST_DB_PATH);
+            db.saveAutoReaction('120363000000000002@g.us', '😂', TEST_DB_PATH);
 
             const incomingMessage = {
                 body: '/schedule something',
-                from: '120363334849146364@g.us',
+                from: '120363000000000002@g.us',
                 react: jest.fn().mockResolvedValue(),
                 reply: jest.fn().mockResolvedValue()
             };
@@ -542,7 +542,7 @@ describe('bot index.js integration', () => {
 
         test('should list active auto-reactions when /autoreact list is sent', async () => {
             mockClientInstance.getChats.mockResolvedValue([
-                { id: { _serialized: '12345@g.us' }, name: 'Eventos vapor' }
+                { id: { _serialized: '12345@g.us' }, name: 'Grupo Trabajo' }
             ]);
 
             // Save some auto-reactions
@@ -557,13 +557,13 @@ describe('bot index.js integration', () => {
             await mockEvents['message'](incomingMessage);
 
             expect(incomingMessage.reply).toHaveBeenCalledWith(
-                expect.stringContaining('1. *Chat:* Eventos vapor | *Emoji:* 😂')
+                expect.stringContaining('1. *Chat:* Grupo Trabajo | *Emoji:* 😂')
             );
         });
 
         test('should list user-specific auto-reactions when /autoreact list is sent', async () => {
             mockClientInstance.getChats.mockResolvedValue([
-                { id: { _serialized: '12345@g.us' }, name: 'Eventos vapor' }
+                { id: { _serialized: '12345@g.us' }, name: 'Grupo Trabajo' }
             ]);
 
             db.saveAutoReaction('12345@g.us', '😂', TEST_DB_PATH);
@@ -578,7 +578,7 @@ describe('bot index.js integration', () => {
             await mockEvents['message'](incomingMessage);
 
             expect(incomingMessage.reply).toHaveBeenCalledWith(
-                expect.stringContaining('1. *Chat:* Eventos vapor')
+                expect.stringContaining('1. *Chat:* Grupo Trabajo')
             );
             expect(incomingMessage.reply).toHaveBeenCalledWith(
                 expect.stringContaining('• *Por defecto:* 😂')
@@ -604,12 +604,12 @@ describe('bot index.js integration', () => {
 
         test('should list active scheduled messages when /schedule list is sent', async () => {
             mockClientInstance.getChats.mockResolvedValue([
-                { id: { _serialized: '5491112345678@c.us' }, name: 'Xiomara' }
+                { id: { _serialized: '5491112345678@c.us' }, name: 'Juan Perez' }
             ]);
 
             db.addMessage({
                 to: '5491112345678@c.us',
-                body: 'Hello Xiomara',
+                body: 'Hello Juan Perez',
                 scheduledAt: new Date(Date.now() + 50000).toISOString(),
                 status: 'pending'
             }, TEST_DB_PATH);
@@ -630,7 +630,7 @@ describe('bot index.js integration', () => {
             await mockEvents['message'](incomingMessage);
 
             expect(incomingMessage.reply).toHaveBeenCalledWith(
-                expect.stringContaining('Hello Xiomara')
+                expect.stringContaining('Hello Juan Perez')
             );
             expect(incomingMessage.reply).toHaveBeenCalledWith(
                 expect.stringContaining('Everyday hello')
@@ -689,11 +689,11 @@ describe('bot index.js integration', () => {
 
         test('should parse and schedule daily recurring messages', async () => {
             mockClientInstance.getChats.mockResolvedValue([
-                { id: { _serialized: '12345@g.us' }, name: 'Eventos vapor' }
+                { id: { _serialized: '12345@g.us' }, name: 'Grupo Trabajo' }
             ]);
 
             const incomingMessage = {
-                body: '/schedule "Eventos vapor" cada dia 18:30 Reporte diario',
+                body: '/schedule "Grupo Trabajo" cada dia 18:30 Reporte diario',
                 from: 'my-number@c.us',
                 reply: jest.fn().mockResolvedValue()
             };
@@ -717,11 +717,11 @@ describe('bot index.js integration', () => {
 
         test('should parse and schedule weekly recurring messages', async () => {
             mockClientInstance.getChats.mockResolvedValue([
-                { id: { _serialized: '12345@g.us' }, name: 'Eventos vapor' }
+                { id: { _serialized: '12345@g.us' }, name: 'Grupo Trabajo' }
             ]);
 
             const incomingMessage = {
-                body: '/schedule "Eventos vapor" cada lunes 09:00 Reunión de inicio',
+                body: '/schedule "Grupo Trabajo" cada lunes 09:00 Reunión de inicio',
                 from: 'my-number@c.us',
                 reply: jest.fn().mockResolvedValue()
             };

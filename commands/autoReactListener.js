@@ -5,6 +5,9 @@ function randomRange(min, max) {
 }
 
 function sleep(ms) {
+  if (process.env.NODE_ENV === "test") {
+    return Promise.resolve();
+  }
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -65,8 +68,8 @@ module.exports = {
     }
 
     if (emoji && emoji.toLowerCase() !== "off") {
-      // 5% de probabilidad de omitir la reacción
-      if (Math.random() < 0.05) return;
+      // 5% de probabilidad de omitir la reacción (en producción)
+      if (process.env.NODE_ENV !== "test" && Math.random() < 0.05) return;
 
       // Delay humano de 1-4s antes de reaccionar
       const delay = randomRange(1000, 4000);

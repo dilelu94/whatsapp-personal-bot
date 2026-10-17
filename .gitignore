@@ -5,7 +5,10 @@ vpsCredentials.json
 sshKey20260524.key
 sshKey20260524.key.pub
 tests/test_*_storage.json
+qr*.txt
 qr.txt
+qrRaw.txt
+qrUrl.txt
 qr_raw.txt
 qr_url.txt
 
